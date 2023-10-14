@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-server-deployment
+spec:
+  replicas: 1 # You can adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: minecraft-server
+  template:
+    metadata:
+      labels:
+        app: minecraft-server
+    spec:
+      containers:
+      - name: minecraft-server
+        image: itzg/minecraft-server:latest
+        volumeMounts:
+        - mountPath: /data
+          name: minecraft-server-data
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: ONLINE_MODE
+          value: "FALSE"
+        ports:
+        - containerPort: 25565
+        # volumeMounts:
+        # - name: config-volume
+        #   mountPath: /data/server.properties
+        resources:
+          requests:
+            memory: "2000Mi"
+            cpu: "2"
+          limits:
+            memory: "3000Mi"
+            cpu: "3"
+      volumes:
+      - name: minecraft-server-data
+        persistentVolumeClaim:
+          claimName: minecraft-server-data
