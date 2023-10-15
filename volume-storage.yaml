@@ -4,7 +4,7 @@ metadata:
   name: minecraft-server-data
 spec:
   accessModes:
-    - ReadWriteOnce  # Must match the PV's access mode
+    - ReadWriteOnce 
   resources:
     requests:
-      storage: 5Gi  # Requested storage size
+      storage: 5Gi 
