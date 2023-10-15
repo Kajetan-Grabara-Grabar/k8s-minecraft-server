@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: alpine-backup
+spec:
+  template:
+    metadata:
+      name: alpine-backup-pod
+    spec:
+      volumes:
+        - name: minecraft-server-data
+          persistentVolumeClaim:
+            claimName: minecraft-server-data
+        - name: minecraft-backup
+          persistentVolumeClaim:
+            claimName: minecraft-backup
+
+      containers:
+        - name: alpine-backup
+          image: alpine:latest
+          command: ["tar", "-czvf" , "/minecraft-server-backup/minecraft-server.tar.gz", "/minecraft-server-data"]
+          volumeMounts:
+            - name: minecraft-server-data
+              mountPath: /minecraft-server-data 
+            - name: minecraft-backup
+              mountPath: /minecraft-server-backup 
+      restartPolicy: Never

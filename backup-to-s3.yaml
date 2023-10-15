@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: aws-cli-job
+spec:
+  template:
+    metadata:
+      name: aws-cli-pod
+    spec:
+      volumes:
+        - name: minecraft-backup
+          persistentVolumeClaim:
+            claimName: minecraft-backup
+
+      containers:
+        - name: aws-cli
+          image: amazon/aws-cli:latest
+          command: [ "aws", "s3", "cp", "/minecraft-server-backup/minecraft-server.tar.gz", "s3://your-s3-name/" , "--region", "your-s3-region" ]
+          env:
+          - name: AWS_ACCESS_KEY_ID
+            value: 
+          - name: AWS_SECRET_ACCESS_KEY
+            value: 
+          volumeMounts:
+            - name: minecraft-backup
+              mountPath: /minecraft-server-backup # Mount the AWS CLI configuration to this path
+      restartPolicy: Never
